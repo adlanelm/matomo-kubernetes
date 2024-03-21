@@ -8,6 +8,7 @@ metadata:
   namespace: {{.Values.namespace}}
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
+    kubernetes.io/ingress.class: {{.Values.matomo.ingress.ingressClassName | default "nginx"}}
     nginx.ingress.kubernetes.io/server-snippet: |
       gzip on;
       gzip_disable "MSIE [1-6]\.";
@@ -26,6 +27,7 @@ metadata:
       {{- end }}
     {{- end }}
 spec:
+  ingressClassName: {{.Values.matomo.ingress.ingressClassName | default "nginx"}}
   rules:
   - host: {{.Values.matomo.tracker.hostname}}
     http:

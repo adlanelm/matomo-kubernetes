@@ -12,6 +12,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/proxy-body-size: 200m
     nginx.ingress.kubernetes.io/proxy-read-timeout: 700s
+    kubernetes.io/ingress.class: {{.Values.matomo.ingress.ingressClassName | default "nginx"}}
     {{- if .Values.matomo.ingress.annotations }}
       {{- with .Values.matomo.ingress.annotations }}
         {{- toYaml . | nindent 4 }}
@@ -20,8 +21,10 @@ metadata:
     {{- if .Values.matomo.dashboard.whitelist }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{.Values.matomo.dashboard.whitelist | toPrettyJson}}
     {{ else }}
-  {{- end }}
+    {{- end }}
+
 spec:
+  ingressClassName: {{.Values.matomo.ingress.ingressClassName | default "nginx"}}
   rules:
   - host: {{.Values.matomo.dashboard.hostname}}
     http:

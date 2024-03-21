@@ -30,6 +30,13 @@ matomo:
   postInstallCommand: ""
   preUpgradeSleepTime: 5
   preUpgradeCommand: ""
+  #custom config json
+  config: # |
+  #  {
+  #      "PluginsInstalled": [
+  #        "Diagnostics", ...
+  #  
+  
   ## If you have a premium license for plugins, set it here.
   ## you need to create the secret before refering it.
   ## As:
@@ -40,9 +47,9 @@ matomo:
   license:
   ingress:
     enabled: true
+    ingressClassName: nginx
     annotations:
       digitalist-net-services.org: "matomo"
-      kubernetes.io/ingress.class: "nginx"
   cli:
     replicas: 1
     enabled: true
@@ -85,6 +92,7 @@ matomo:
     #     requests:
     #       cpu: 40m
     #       memory: 32Mi
+    #nginx.ingress.kubernetes.io/whitelist-source-range:
     enabled: true
     replicas: 1
     loadbalancer: false
@@ -96,6 +104,10 @@ matomo:
       email: foo@example.com
     nginx:
       nginxWorkerProcesses: 5
+      # or entirely custom config
+      config: #|
+      #  worker_processes 5;
+      # ...
   queuedTrackingMonitor:
     enabled: true
   queuedTrackingProcess:
@@ -109,6 +121,10 @@ matomo:
     nginx:
       resources:
       nginxWorkerProcesses: 5
+      # or entirely custom config
+      config: #|
+      #  worker_processes 5;
+      # ...
     phpfpm:
       type: ondemand
       max_children: 75
