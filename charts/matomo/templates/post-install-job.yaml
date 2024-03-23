@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
     app.kubernetes.io/instance: {{ .Release.Name | quote }}
-    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     partOf: matomo
   annotations:
@@ -31,7 +31,7 @@ spec:
         lifecycle:
           postStart:
             exec:
-              command: [ 'sh' , '-c' , '{{.Values.matomo.installCommand}}' ]
+              command: [ 'sh' , '-c' , 'rsync -crlOt --no-owner --no-group --no-perms /usr/src/matomo/ /var/www/html/ && {{.Values.matomo.installCommand}}' ] 
         # To do anything with Matomo, we first need to bootstrap it (curl).
         command:  [ 'bash' , '-c' , 'sleep {{.Values.matomo.postInstallSleepTime}}; curl -Il https://{{.Values.matomo.dashboard.hostname}}; {{.Values.matomo.postInstallCommand}}' ]
         env:
